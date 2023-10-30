@@ -42,13 +42,13 @@ async def callback_minute(context: ContextTypes.DEFAULT_TYPE):
         mmo = requests.get(f"{domain}/api/setup/mmo")
         last_msg_id = mmo.json()["value"]
         
-        await context.bot.delete_message(message_id=last_msg_id, chat_id='-1942672774')
-        msg = await context.bot.send_message(chat_id='-1942672774', text=message, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
+        await context.bot.delete_message(message_id=last_msg_id, chat_id='-1001845629407')
+        msg = await context.bot.send_message(chat_id='-1001845629407', text=message, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
 
         requests.put(f"{domain}/api/setup/mmo", {'value': msg.message_id})
     except:
 
-        msg = await context.bot.send_message(chat_id='-1942672774', text=message, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
+        msg = await context.bot.send_message(chat_id='-1001845629407', text=message, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
         requests.put(f"{domain}/api/setup/mmo", {'value': msg.message_id})
 
 
