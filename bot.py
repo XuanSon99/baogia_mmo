@@ -54,6 +54,6 @@ async def callback_minute(context: ContextTypes.DEFAULT_TYPE):
 
 job_queue = app.job_queue
 
-job_minute = job_queue.run_repeating(callback_minute, interval=1800, first=10)
+job_minute = job_queue.run_repeating(callback_minute, interval=300, first=10)
 
 app.run_polling()
