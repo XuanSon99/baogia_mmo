@@ -21,12 +21,16 @@ async def messageHandler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 app = ApplicationBuilder().token(
     "6768614811:AAEhD1YY1yfsVXEV41gLeXCSw_rQXgm18MM").build()
 
-app.add_handler(CommandHandler("start", start)) 
+app.add_handler(CommandHandler("start", start))
 app.add_handler(MessageHandler(filters.ALL, messageHandler))
 
 
 # auto send message
 async def callback_minute(context: ContextTypes.DEFAULT_TYPE):
+
+    reply_markup = InlineKeyboardMarkup(
+        [[InlineKeyboardButton(text='Xem tỷ giá', url='https://mmo4me.co'),
+          InlineKeyboardButton(text='Mua bán USDT', url='https://exchange.chootc.com')]])
 
     buy = requests.get(
         f"{domain}/api/p2p?type=buy&asset=usdt&fiat=vnd&page=1")
@@ -41,14 +45,14 @@ async def callback_minute(context: ContextTypes.DEFAULT_TYPE):
     try:
         mmo = requests.get(f"{domain}/api/setup/mmo")
         last_msg_id = mmo.json()["value"]
-        
+
         await context.bot.delete_message(message_id=last_msg_id, chat_id='-1001845629407')
-        msg = await context.bot.send_message(chat_id='-1001845629407', text=message, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
+        msg = await context.bot.send_message(chat_id='-1001845629407', text=message, reply_markup=reply_markup, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
 
         requests.put(f"{domain}/api/setup/mmo", {'value': msg.message_id})
     except:
 
-        msg = await context.bot.send_message(chat_id='-1001845629407', text=message, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
+        msg = await context.bot.send_message(chat_id='-1001845629407', text=message, reply_markup=reply_markup, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
         requests.put(f"{domain}/api/setup/mmo", {'value': msg.message_id})
 
 
