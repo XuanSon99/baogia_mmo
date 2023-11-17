@@ -37,8 +37,8 @@ async def callback_minute(context: ContextTypes.DEFAULT_TYPE):
     sell = requests.get(
         f"{domain}/api/p2p?type=sell&asset=usdt&fiat=vnd&page=1")
 
-    buy_price = buy.json()['data'][2]['adv']['price']
-    sell_price = sell.json()['data'][2]['adv']['price']
+    buy_price = buy.json()['data'][9]['adv']['price']
+    sell_price = sell.json()['data'][9]['adv']['price']
 
     message = f"<b>USDT</b>\nBán: <b>{int(buy_price):,} VND</b>\nMua: <b>{int(sell_price):,} VND</b>\n\nXem tỷ giá miễn phí tại:\nhttps://mmo4me.co"
 
