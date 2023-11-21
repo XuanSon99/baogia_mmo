@@ -7,6 +7,8 @@ import math
 import random
 
 domain = "https://api.chootc.com"
+GROUP_ID = '-1001845629407'
+# GROUP_ID = '-4014656463'
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -37,8 +39,8 @@ async def callback_minute(context: ContextTypes.DEFAULT_TYPE):
     sell = requests.get(
         f"{domain}/api/p2p?type=sell&asset=usdt&fiat=vnd&page=1")
 
-    buy_price = buy.json()['data'][8]['adv']['price']
-    sell_price = sell.json()['data'][8]['adv']['price']
+    buy_price = buy.json()['data'][19]['adv']['price']
+    sell_price = sell.json()['data'][19]['adv']['price']
 
     message = f"<b>USDT</b>\nBán: <b>{int(buy_price):,} VND</b>\nMua: <b>{int(sell_price):,} VND</b>\n\nXem tỷ giá miễn phí tại:\nhttps://mmo4me.co"
 
@@ -46,18 +48,19 @@ async def callback_minute(context: ContextTypes.DEFAULT_TYPE):
         mmo = requests.get(f"{domain}/api/setup/mmo")
         last_msg_id = mmo.json()["value"]
 
-        await context.bot.delete_message(message_id=last_msg_id, chat_id='-1001845629407')
-        msg = await context.bot.send_message(chat_id='-1001845629407', text=message, reply_markup=reply_markup, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
+        remove = await context.bot.delete_message(message_id=last_msg_id, chat_id=GROUP_ID)
+        if remove:
+            msg = await context.bot.send_message(chat_id=GROUP_ID, text=message, reply_markup=reply_markup, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
+            requests.put(f"{domain}/api/setup/mmo", {'value': msg.message_id})
 
-        requests.put(f"{domain}/api/setup/mmo", {'value': msg.message_id})
-    except:
-
-        msg = await context.bot.send_message(chat_id='-1001845629407', text=message, reply_markup=reply_markup, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
-        requests.put(f"{domain}/api/setup/mmo", {'value': msg.message_id})
+    except Exception as e:
+        if "not found" in str(e):
+            msg = await context.bot.send_message(chat_id=GROUP_ID, text=message, reply_markup=reply_markup, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
+            requests.put(f"{domain}/api/setup/mmo", {'value': msg.message_id})
 
 
 job_queue = app.job_queue
 
-job_minute = job_queue.run_repeating(callback_minute, interval=60, first=10)
+job_minute = job_queue.run_repeating(callback_minute, interval=20, first=10)
 
 app.run_polling()
