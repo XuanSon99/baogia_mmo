@@ -44,19 +44,24 @@ async def callback_minute(context: ContextTypes.DEFAULT_TYPE):
 
     message = f"<b>USDT</b>\nBán: <b>{int(buy_price):,} VND</b>\nMua: <b>{int(sell_price):,} VND</b>\n\nXem tỷ giá miễn phí tại:\nhttps://mmo4me.co"
 
-    try:
-        mmo = requests.get(f"{domain}/api/setup/mmo")
-        last_msg_id = mmo.json()["value"]
+    with open('data.json', 'r', encoding='utf-8') as f:
+        data = json.load(f)
 
-        remove = await context.bot.delete_message(message_id=last_msg_id, chat_id=GROUP_ID)
-        if remove:
-            msg = await context.bot.send_message(chat_id=GROUP_ID, text=message, reply_markup=reply_markup, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
-            requests.put(f"{domain}/api/setup/mmo", {'value': msg.message_id})
+    try:
+        await context.bot.delete_message(message_id=data['id'], chat_id=GROUP_ID)
+
+        msg = await context.bot.send_message(chat_id=GROUP_ID, text=message, reply_markup=reply_markup, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
+
+        data['id'] = msg.message_id
+        with open('data.json', 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2)
 
     except Exception as e:
-        if "not found" in str(e):
-            msg = await context.bot.send_message(chat_id=GROUP_ID, text=message, reply_markup=reply_markup, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
-            requests.put(f"{domain}/api/setup/mmo", {'value': msg.message_id})
+        msg = await context.bot.send_message(chat_id=GROUP_ID, text=message, reply_markup=reply_markup, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
+
+        data['id'] = msg.message_id
+        with open('data.json', 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2)
 
 
 job_queue = app.job_queue
