@@ -47,21 +47,22 @@ async def callback_minute(context: ContextTypes.DEFAULT_TYPE):
     with open('data.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
-    try:
-        await context.bot.delete_message(message_id=data['id'], chat_id=GROUP_ID)
+    for item in data:
+        try:
+            await context.bot.delete_message(message_id=item['msg_id'], chat_id=item['group_id'])
 
-        msg = await context.bot.send_message(chat_id=GROUP_ID, text=message, reply_markup=reply_markup, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
+            msg = await context.bot.send_message(chat_id=item['group_id'], text=message, reply_markup=reply_markup, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
 
-        data['id'] = msg.message_id
-        with open('data.json', 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2)
+            item['msg_id'] = msg.message_id
+            with open('data.json', 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2)
 
-    except Exception as e:
-        msg = await context.bot.send_message(chat_id=GROUP_ID, text=message, reply_markup=reply_markup, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
+        except Exception as e:
+            msg = await context.bot.send_message(chat_id=item['group_id'], text=message, reply_markup=reply_markup, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
 
-        data['id'] = msg.message_id
-        with open('data.json', 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2)
+            item['msg_id'] = msg.message_id
+            with open('data.json', 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2)
 
 
 job_queue = app.job_queue
