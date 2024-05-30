@@ -32,7 +32,7 @@ async def callback_minute(context: ContextTypes.DEFAULT_TYPE):
 
     reply_markup = InlineKeyboardMarkup(
         [[InlineKeyboardButton(text='Xem tỷ giá', url='https://moneyexchange247.com'),
-          InlineKeyboardButton(text='Mua bán PAYPAL', url='https://moneyexchange247.com')]])
+          InlineKeyboardButton(text='Mua bán ngay', url='https://moneyexchange247.com')]])
 
     buy = requests.get(
         f"{domain}/api/p2p?type=buy&asset=usdt&fiat=vnd&page=1")
