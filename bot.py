@@ -6,6 +6,16 @@ from types import SimpleNamespace
 import math
 import random
 
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
+
+session = requests.Session()
+retry = Retry(connect=3, backoff_factor=0.5)
+adapter = HTTPAdapter(max_retries=retry)
+session.mount('http://', adapter)
+session.mount('https://', adapter)
+
 domain = "https://api.chootc.com"
 GROUP_ID = '-1001845629407'
 # GROUP_ID = '-4014656463'
@@ -34,9 +44,9 @@ async def callback_minute(context: ContextTypes.DEFAULT_TYPE):
         [[InlineKeyboardButton(text='Xem tỷ giá', url='https://moneyexchange247.com'),
           InlineKeyboardButton(text='Mua bán ngay', url='https://t.me/exchangenevadie')]])
 
-    buy = requests.get(
+    buy = session.get(
         f"{domain}/api/p2p?type=buy&asset=usdt&fiat=vnd&page=1")
-    sell = requests.get(
+    sell = session.get(
         f"{domain}/api/p2p?type=sell&asset=usdt&fiat=vnd&page=1")
 
     buy_price = buy.json()['data'][19]['adv']['price']
