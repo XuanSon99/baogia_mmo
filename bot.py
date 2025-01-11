@@ -42,7 +42,7 @@ async def callback_minute(context: ContextTypes.DEFAULT_TYPE):
     buy_price = buy.json()['data'][19]['adv']['price']
     sell_price = sell.json()['data'][19]['adv']['price']
 
-    message = f"<b>USDT</b>\nBán: <b>{int(buy_price):,} VND</b>\nMua: <b>{int(sell_price):,} VND</b>\n\nCall/Zalo: 0838333333\nXem tỷ giá miễn phí tại:\nhttps://moneyexchange247.com"
+    message = f"<b>USDT</b>\nBán: <b>{int(buy_price):,} VND</b>\nMua: <b>{int(sell_price):,} VND</b>\n\nCall/Zalo: 0838333333\nTelegram: @exchangenevadie\nXem tỷ giá miễn phí tại:\nhttps://moneyexchange247.com"
 
     with open('data.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
