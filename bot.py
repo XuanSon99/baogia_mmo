@@ -35,9 +35,9 @@ async def callback_minute(context: ContextTypes.DEFAULT_TYPE):
           InlineKeyboardButton(text='Mua bán ngay', url='https://t.me/exchangenevadie')]])
 
     buy = requests.get(
-        f"{domain}/api/p2p?type=buy&asset=usdt&fiat=vnd&page=1")
+        f"{domain}/api/p2p?type=BUY&asset=USDT&fiat=VND&page=1")
     sell = requests.get(
-        f"{domain}/api/p2p?type=sell&asset=usdt&fiat=vnd&page=1")
+        f"{domain}/api/p2p?type=SELL&asset=USDT&fiat=VND&page=1")
 
     buy_price = buy.json()['data'][19]['adv']['price']
     sell_price = sell.json()['data'][19]['adv']['price']
